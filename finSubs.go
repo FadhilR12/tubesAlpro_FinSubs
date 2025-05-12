@@ -133,11 +133,35 @@ func menuSubksripsi() {
 
 		if pilih == 1 {
 
-			//menampilkan list subkripsi yang harus dibayar(sorting?)//
+			// Menampilkan daftar sub pribadi user
+			if len(userSubs) == 0 {
+				fmt.Println("Belum ada subkripsi yang ditambahkan.")
+			} else {
+				fmt.Println("Subkripsi Anda:")
+				for i, sub := range userSubs {
+					fmt.Printf("%d) %s | Rp%d | Mulai: %s\n", i+1, sub.namaAplikasi, sub.harga, sub.tenggatBayar.Format("2006-01-02"))
+				}
+			}
 
 		} else if pilih == 2 {
 
-			//menampilkan semua list subkripsi yang bisa ditambahkan ke akun(sorting & searching?)//
+			// Menampilkan listSubs
+			fmt.Println("Pilih aplikasi untuk ditambahkan:")
+			for i := 0; i < NMAX; i++ {
+				fmt.Printf("%d) %s | Rp%d\n", i+1, subskripsi[i].namaAplikasi, subskripsi[i].harga)
+			}
+			var idx int
+			fmt.Print("Masukkan nomor aplikasi: ")
+			fmt.Scan(&idx)
+			if idx >= 1 && idx <= NMAX {
+				// Tambahkan ke list pribadi user
+				selected := subskripsi[idx-1]
+				selected.tenggatBayar = time.Now() // otomatis catat tanggal sekarang
+				userSubs = append(userSubs, selected)
+				fmt.Println("Subkripsi berhasil ditambahkan!")
+			} else {
+				fmt.Println("Pilihan tidak valid.")
+			}
 
 		} else if pilih == 3 {
 			fmt.Println("Kembali ke menu utama...")
