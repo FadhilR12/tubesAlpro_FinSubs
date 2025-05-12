@@ -15,6 +15,8 @@ type langganan struct {
 
 type subcription [NMAX]langganan
 
+var userSubs []langganan
+
 func main() {
 	menuUtama()
 }
