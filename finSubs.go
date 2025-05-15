@@ -17,6 +17,22 @@ type subcription [NMAX]langganan
 
 var userSubs []langganan
 
+// colors.go
+var (
+	reset    = "\033[0m"
+	red      = "\033[31m"
+	green    = "\033[32m"
+	yellow   = "\033[33m"
+	blue     = "\033[34m"
+	magenta  = "\033[35m"
+	cyan     = "\033[36m"
+	white    = "\033[37m"
+	gray     = "\033[90m"
+	orange   = "\033[38;5;208m"
+	textLofi = "\033[38;2;220;220;180m" // Teks putih kekuningan
+	gold     = "\033[38;2;255;180;100m" // Oranye keemasan
+)
+
 func main() {
 	var saldo int = 0
 	menuUtama(&saldo)
@@ -63,7 +79,7 @@ func menuUtama(saldo *int) {
 
 	for pilih != 5 {
 		fmt.Println("==========================")
-		fmt.Println("      🍒 FinSubs 🍒")
+		fmt.Println("      🍒 " + white + "F" + red + "i" + white + "n" + red + "S" + white + "u" + red + "b" + white + "s" + reset + " 🍒")
 		fmt.Println("==========================")
 		fmt.Println("1) 💵 Keuangan")
 		fmt.Println("2) ✅ Subkripsi")
@@ -75,7 +91,7 @@ func menuUtama(saldo *int) {
 		fmt.Scan(&pilih)
 
 		if pilih == 1 {
-			menuKeuangan(&saldo)
+			menuKeuangan(saldo)
 		} else if pilih == 2 {
 			menuSubksripsi()
 		} else if pilih == 3 {
@@ -97,9 +113,9 @@ func menuKeuangan(saldo *int) {
 		fmt.Println("==========================")
 		fmt.Println("       💵 Keuangan")
 		fmt.Println("==========================")
-		fmt.Println("1) Cek Saldo")
-		fmt.Println("2) Tambah Saldo")
-		fmt.Println("3) Kembali")
+		fmt.Println("1) 🔍 Cek Saldo")
+		fmt.Println("2) ➕ Tambah Saldo")
+		fmt.Println("3) ↩️ Kembali")
 		fmt.Println()
 		fmt.Print("Pilih: ")
 		fmt.Scan(&pilih) 
@@ -139,9 +155,9 @@ func menuSubksripsi() {
 		fmt.Println("===========================")
 		fmt.Println("        ✅ Subskripsi")
 		fmt.Println("===========================")
-		fmt.Println("1) Cek Subkripsi")
-		fmt.Println("2) Tambah Subkripsi")
-		fmt.Println("3) Kembali")
+		fmt.Println("1) 🔍 Cek Subkripsi")
+		fmt.Println("2) ➕ Tambah Subkripsi")
+		fmt.Println("3) ↩️ Kembali")
 		fmt.Println()
 		fmt.Print("Pilih: ")
 		fmt.Scan(&pilih)
@@ -188,13 +204,14 @@ func menuSubksripsi() {
 
 func menuPengeluaran() {
 	// jaga jaga jika ingin menggunakan menu//
+	var pilih int
 	for pilih != 3 {
 		fmt.Println("===========================")
 		fmt.Println("        💸 Pengeluaran")
 		fmt.Println("===========================")
 		fmt.Println("1) Riwayat Pengeluaran")
 		fmt.Println("2) -")
-		fmt.Println("3) Kembali")
+		fmt.Println("3) ↩️ Kembali")
 		fmt.Println()
 		fmt.Print("Pilih: ")
 		fmt.Scan(&pilih)
