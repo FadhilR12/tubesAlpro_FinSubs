@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const NMAX int = 15
+const NMAX int = 16
 
 type langganan struct {
 	namaAplikasi string
@@ -18,7 +18,8 @@ type subcription [NMAX]langganan
 var userSubs []langganan
 
 func main() {
-	menuUtama()
+	var saldo int = 0
+	menuUtama(&saldo)
 }
 
 func listSubs(subskripsi *subcription) {
@@ -37,6 +38,7 @@ func listSubs(subskripsi *subcription) {
 	subskripsi[12].namaAplikasi = "Canva Pro"
 	subskripsi[13].namaAplikasi = "Duolingo Plus"
 	subskripsi[14].namaAplikasi = "NordVPN"
+	subskripsi[15].namaAplikasi = "Roblox Premium"
 
 	subskripsi[0].harga = 153000
 	subskripsi[1].harga = 71490
@@ -53,22 +55,23 @@ func listSubs(subskripsi *subcription) {
 	subskripsi[12].harga = 95000
 	subskripsi[13].harga = 89000
 	subskripsi[14].harga = 64000
+	subskripsi[15].harga = 180000
 }
 
-func menuUtama() {
-	var pilih, saldo int
+func menuUtama(saldo *int) {
+	var pilih int
 
 	for pilih != 5 {
-		fmt.Println("===========================")
-		fmt.Println("          FinSubs")
-		fmt.Println("===========================")
-		fmt.Println("1) Keuangan")
-		fmt.Println("2) Subkripsi")
-		fmt.Println("3) Pengeluaran")
-		fmt.Println("4) Pembayaran Subkripsi")
-		fmt.Println("5) Keluar")
+		fmt.Println("==========================")
+		fmt.Println("      🍒 FinSubs 🍒")
+		fmt.Println("==========================")
+		fmt.Println("1) 💵 Keuangan")
+		fmt.Println("2) ✅ Subkripsi")
+		fmt.Println("3) 💸 Pengeluaran")
+		fmt.Println("4) 💰 Pembayaran Subkripsi")
+		fmt.Println("5) ↩️ Keluar")
 		fmt.Println()
-		fmt.Print("Pilih: ")
+		fmt.Print("  Pilih: ")
 		fmt.Scan(&pilih)
 
 		if pilih == 1 {
@@ -91,23 +94,33 @@ func menuUtama() {
 func menuKeuangan(saldo *int) {
 	var pilih int
 	for pilih != 3 {
-		fmt.Println("===========================")
-		fmt.Println("          Keuangan")
-		fmt.Println("===========================")
+		fmt.Println("==========================")
+		fmt.Println("       💵 Keuangan")
+		fmt.Println("==========================")
 		fmt.Println("1) Cek Saldo")
 		fmt.Println("2) Tambah Saldo")
 		fmt.Println("3) Kembali")
 		fmt.Println()
 		fmt.Print("Pilih: ")
-		fmt.Scan(&pilih)
-
+		fmt.Scan(&pilih) 
+		
 		if pilih == 1 {
 
 			//menampilkan saldo//
+			fmt.Printf("Saldo Anda saat ini: Rp%d\n",*saldo)
 
 		} else if pilih == 2 {
 
+			var nominal int
 			//memasukan nominal agar saldo terisi//
+			fmt.Print("Masukkan nominal yang ingin ditambahkan:")
+			fmt.Scan(&nominal)
+			if nominal > 0 {
+				*saldo += nominal
+				fmt.Printf("Saldo berhasil ditambahkan! Saldo baru: Rp%d\n",*saldo)
+			} else {
+				fmt.Println("Nominal tidak valid.")
+			}
 
 		} else if pilih == 3 {
 			fmt.Println("Kembali ke menu utama...")
@@ -124,7 +137,7 @@ func menuSubksripsi() {
 
 	for pilih != 3 {
 		fmt.Println("===========================")
-		fmt.Println("          Subskripsi")
+		fmt.Println("        ✅ Subskripsi")
 		fmt.Println("===========================")
 		fmt.Println("1) Cek Subkripsi")
 		fmt.Println("2) Tambah Subkripsi")
@@ -175,13 +188,12 @@ func menuSubksripsi() {
 
 func menuPengeluaran() {
 	// jaga jaga jika ingin menggunakan menu//
-	var pilih int
 	for pilih != 3 {
 		fmt.Println("===========================")
-		fmt.Println("          Pengeluaran")
+		fmt.Println("        ✅ Subskripsi")
 		fmt.Println("===========================")
-		fmt.Println("1) Riwayat Transaksi")
-		fmt.Println("2) COMING SOON")
+		fmt.Println("1) Cek Subkripsi")
+		fmt.Println("2) Tambah Subkripsi")
 		fmt.Println("3) Kembali")
 		fmt.Println()
 		fmt.Print("Pilih: ")
