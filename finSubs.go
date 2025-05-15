@@ -190,10 +190,10 @@ func menuPengeluaran() {
 	// jaga jaga jika ingin menggunakan menu//
 	for pilih != 3 {
 		fmt.Println("===========================")
-		fmt.Println("        ✅ Subskripsi")
+		fmt.Println("        💸 Pengeluaran")
 		fmt.Println("===========================")
-		fmt.Println("1) Cek Subkripsi")
-		fmt.Println("2) Tambah Subkripsi")
+		fmt.Println("1) Riwayat Pengeluaran")
+		fmt.Println("2) -")
 		fmt.Println("3) Kembali")
 		fmt.Println()
 		fmt.Print("Pilih: ")
