@@ -294,13 +294,12 @@ func menuSubksripsi(subskripsi *subcription, list *user) {
 func sortASC(a *subcription) {
 	var i, j, idx_min int
 	var temp langganan
-	const n = NMAX
 
 	i = 1
-	for i <= n-1 {
+	for i <= NMAX-1 {
 		idx_min = i - 1
 		j = i
-		for j < n {
+		for j < NMAX {
 			if a[idx_min].harga > a[j].harga {
 				idx_min = j
 			}
