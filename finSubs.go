@@ -15,6 +15,7 @@ type langganan struct {
 
 type subcription [NMAX]langganan
 type user [NMAX]langganan
+type riwayat [NMAX]langganan
 
 // colors.go
 var (
@@ -82,6 +83,7 @@ func menuUtama(saldo *int) {
 	var pilih int
 	var subskripsi subcription
 	var list user
+	var history riwayat
 
 	for pilih != 5 {
 		fmt.Println(bgDarkPastelUngu + "                              " + reset)
@@ -92,7 +94,7 @@ func menuUtama(saldo *int) {
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❷  Subkripsi               " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❸  Pengeluaran             " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❸  Riwayat Transaksi        " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❹  Renewal Subkripsi    " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
@@ -111,9 +113,9 @@ func menuUtama(saldo *int) {
 			menuSubksripsi(&subskripsi, &list)
 		} else if pilih == 3 {
 			//bisa saja ditambahkan fitur lain didalam 'menuPengeluaran' atau tidak sama sekali menggunakan menu, jadi langsung mengeluarkan riwayat transaksi//
-			menuPengeluaran()
+			menuPengeluaran(list, history)
 		} else if pilih == 4 {
-			pembayaran(saldo, &list)
+			pembayaran(saldo, &list, &history)
 		} else if pilih == 5 {
 			fmt.Println(green + "Terimakasih telah menggunakan aplikasi kami. Have a cozy day! 🌙" + reset)
 		} else {
@@ -327,22 +329,22 @@ func sortDSC(a *subcription) {
 	}
 }
 
-func menuPengeluaran() {
+func menuPengeluaran(list user, history riwayat) {
 	// jaga jaga jika ingin menggunakan menu//
 	var pilih int
-	for pilih != 3 {
+	for pilih != 1 {
 		fmt.Println(bgDarkPastelUngu + "                              " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "      🍒 " + lightRed + "Pengeluaran" + reset + bgDarkestPastelUngu + " 🍒     " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "      🍒 " + lightRed + "Riwayat Transaksi" + reset + bgDarkestPastelUngu + " 🍒     " + bgDarkPastelUngu + " " + reset)
+
+		for i := 0; i < NMAX; i++ {
+			if history[i].namaAplikasi != "" {
+				fmt.Printf("%d. %s - %s\n", i+1, history[i].namaAplikasi, history[i].tenggatBayar.Format("02 Jan 2006"))
+			}
+		}
+
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  Riwayat Pengeluaran     " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❷  -                       " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❸  Kembali                 " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  kembali				   " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + "                            " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + "                              " + reset)
@@ -353,24 +355,19 @@ func menuPengeluaran() {
 
 		if pilih == 1 {
 
-			//menampilkan list subkripsi yang telah dibayar//
-
-		} else if pilih == 2 {
-
-			// jika ingin menambahkan fitur lain tambahkan saja//
-
-		} else if pilih == 3 {
 			fmt.Println("Kembali ke menu utama...")
+
 		} else {
 			fmt.Println(red + "Invalid, mohon coba lagi." + reset)
 		}
 	}
 }
 
-func pembayaran(saldo *int, list *user) {
+func pembayaran(saldo *int, list *user, history *riwayat) {
 	var total int
 	var pilih string
 	var cek bool = false
+	var ditambahkan bool = false
 
 	fmt.Println("Rincian tagihan: ")
 
@@ -403,6 +400,19 @@ func pembayaran(saldo *int, list *user) {
 				}
 			}
 			fmt.Println("Pembayaran berhasil. Saldo tersisa: Rp.", *saldo)
+
+			for i := 0; i < NMAX; i++ {
+				if list[i].namaAplikasi != "" {
+					ditambahkan = false
+					for j := 0; j < NMAX && !ditambahkan; j++ {
+						if history[j].namaAplikasi == "" && !ditambahkan {
+							history[j].namaAplikasi = list[i].namaAplikasi
+							history[j].tenggatBayar = time.Now()
+							ditambahkan = true
+						}
+					}
+				}
+			}
 		}
 	} else {
 		fmt.Println("Kembali ke menu utama...")
