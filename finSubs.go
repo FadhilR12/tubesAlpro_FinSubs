@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -56,7 +57,7 @@ func listSubs(subskripsi *subcription) {
 	subskripsi[9].namaAplikasi = "Adobe Creative Cloud"
 	subskripsi[10].namaAplikasi = "Crunchyroll         "
 	subskripsi[11].namaAplikasi = "LinkedIn Premium    "
-	subskripsi[12].namaAplikasi = "Canva Pro           "
+	subskripsi[12].namaAplikasi = "Canva               "
 	subskripsi[13].namaAplikasi = "Duolingo Plus       "
 	subskripsi[14].namaAplikasi = "NordVPN             "
 	subskripsi[15].namaAplikasi = "Roblox Premium      "
@@ -94,9 +95,9 @@ func menuUtama(saldo *int) {
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❷  Subkripsi               " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❸  Riwayat Transaksi        " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❸  Riwayat Transaksi       " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❹  Renewal Subkripsi    " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❹  Renewal Subkripsi       " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❺  Keluar                  " + bgDarkPastelUngu + " " + reset)
 		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + "                            " + bgDarkPastelUngu + " " + reset)
@@ -180,6 +181,39 @@ func menuKeuangan(saldo *int) {
 	}
 }
 
+func sortByName(subskripsi *subcription) {
+	for i := 1; i < NMAX; i++ {
+		j := i
+		for j > 0 && strings.Compare(subskripsi[j-1].namaAplikasi, subskripsi[j].namaAplikasi) > 0 {
+			// Swap
+			temp := subskripsi[j]
+			subskripsi[j] = subskripsi[j-1]
+			subskripsi[j-1] = temp
+			j--
+		}
+	}
+}
+
+func binarySearch(subskripsi *subcription, keyword string) int {
+	low := 0
+	high := NMAX - 1
+
+	for low <= high {
+		mid := (low + high) / 2
+		currentName := strings.ToLower(strings.TrimSpace(subskripsi[mid].namaAplikasi))
+		keywordLower := strings.ToLower(keyword)
+
+		if strings.Contains(currentName, keywordLower) {
+			return mid // Ketemu
+		} else if strings.Compare(currentName, keywordLower) < 0 {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	return -1 // Tidak ketemu
+}
+
 func menuSubksripsi(subskripsi *subcription, list *user) {
 	var pilih, pilihSort, pilihTambah, pilihSubs int
 	listSubs(subskripsi)
@@ -218,19 +252,42 @@ func menuSubksripsi(subskripsi *subcription, list *user) {
 				if !cek {
 					fmt.Println("Belum ada subskripsi.")
 				}
-				fmt.Println("1. Hapus Subskripsi")
-				fmt.Prinltn("2. Kembali")
+				fmt.Println(bgDarkPastelUngu + "                              " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  Hapus Subskripsi        " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❷  Kembali                 " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + "                            " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + "                              " + reset)
+				fmt.Println()
+				fmt.Print(gold + "  Pilih: ")
 				fmt.Scan(&pilihSubs)
+				fmt.Print(reset)
 				if pilihSubs == 1 {
 					if !cek {
 						fmt.Println("Tidak ada subskripsi")
-					}
-						//Fungsi menghapus aplikasi dari array user
+					} else {
+						fmt.Print(cyan + "Masukkan nomor subskripsi yang ingin dihapus: " + reset)
+						var hapus int
+						fmt.Scan(&hapus)
+						idx := hapus - 1
 
+						if idx < 0 || idx >= NMAX || list[idx].namaAplikasi == "" {
+							fmt.Println(red + "Nomor tidak valid." + reset)
+						} else {
+							// Geser elemen ke kiri untuk menimpa data yang dihapus
+							for i := idx; i < NMAX-1; i++ {
+								list[i] = list[i+1]
+							}
+							// Hapus data terakhir
+							list[NMAX-1] = langganan{}
+							fmt.Println(green + "Subskripsi berhasil dihapus." + reset)
+						}
+					}
 				} else if pilihSubs == 2 {
-					Println("Kembali ke menu utama...")
+					fmt.Println("Kembali ke menu utama...")
 				} else {
-					Println("Pilihan tidak valid")
+					fmt.Println("Pilihan tidak valid")
 				}
 			}
 
@@ -242,15 +299,65 @@ func menuSubksripsi(subskripsi *subcription, list *user) {
 				for i := 0; i < NMAX; i++ {
 					fmt.Printf("%d. %s - Rp%d\n", i+1, subskripsi[i].namaAplikasi, subskripsi[i].harga)
 				}
-				fmt.Println("====================================")
-				fmt.Println("1. Cari Subskripsi")
-				fmt.Println("2. Urutkan list berdasarkan harga")
-				fmt.Println("3. Tambahkan subskripsi")
-				fmt.Println("4. Kembali")
-				fmt.Print("Pilih: ")
+				fmt.Println(bgDarkPastelUngu + "                                     " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                                   " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  Cari Subskripsi                " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                                   " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❷  Urutkan list berdasarkan harga " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                                   " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❸  Tambahkan subskripsi           " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                                   " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❹  Kembali                        " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                                   " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + "                                   " + bgDarkPastelUngu + " " + reset)
+				fmt.Println(bgDarkPastelUngu + "                                     " + reset)
+				fmt.Println()
+				fmt.Print(gold + "  Pilih: ")
 				fmt.Scan(&pilih)
+				fmt.Print(reset)
 				if pilih == 1 {
 					// fungsi search
+					sortByName(subskripsi) // Pastikan data terurut sebelum binary search
+					var keyword string
+					fmt.Print(cyan + "Masukkan nama aplikasi yang ingin dicari: " + reset)
+					fmt.Scan(&keyword)
+
+					idx := binarySearch(subskripsi, keyword)
+					if idx == -1 {
+						fmt.Println(red + "Aplikasi tidak ditemukan." + reset)
+					} else {
+						fmt.Println(green + "Hasil pencarian:" + reset)
+						fmt.Printf("%s%d. %s - Rp%d%s\n", cyan, idx+1, subskripsi[idx].namaAplikasi, subskripsi[idx].harga, reset)
+
+						fmt.Print(cyan + "Tambahkan ke daftar Anda? (Y/N): " + reset)
+						var confirm string
+						fmt.Scan(&confirm)
+
+						if confirm == "Y" || confirm == "y" {
+							var sudahAda bool = false
+							var slotKosong int = -1
+
+							for i := 0; i < NMAX; i++ {
+								if list[i].namaAplikasi == subskripsi[idx].namaAplikasi {
+									sudahAda = true
+									break
+								}
+								if list[i].namaAplikasi == "" && slotKosong == -1 {
+									slotKosong = i
+								}
+							}
+
+							if sudahAda {
+								fmt.Println(red + "Aplikasi sudah ada di daftar Anda." + reset)
+							} else if slotKosong != -1 {
+								subskripsi[idx].tenggatBayar = time.Now().AddDate(0, 1, 0)
+								list[slotKosong] = subskripsi[idx]
+								fmt.Println(green + "Aplikasi berhasil ditambahkan." + reset)
+							} else {
+								fmt.Println(red + "Daftar Anda penuh, tidak bisa menambahkan." + reset)
+							}
+						}
+					}
 				} else if pilih == 2 {
 					// fungsi sort
 					fmt.Println("1. Termurah")
@@ -346,33 +453,50 @@ func sortDSC(a *subcription) {
 }
 
 func menuPengeluaran(list user, history riwayat) {
-	// jaga jaga jika ingin menggunakan menu//
 	var pilih int
-	for pilih != 1 {
-		fmt.Println(bgDarkPastelUngu + "                              " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "      🍒 " + lightRed + "Riwayat Transaksi" + reset + bgDarkestPastelUngu + " 🍒     " + bgDarkPastelUngu + " " + reset)
+	var adaRiwayat bool = false
 
-		for i := 0; i < NMAX; i++ {
-			if history[i].namaAplikasi != "" {
-				fmt.Printf("%d. %s - %s\n", i+1, history[i].namaAplikasi, history[i].tenggatBayar.Format("02 Jan 2006"))
+	// Cek apakah ada riwayat transaksi
+	for i := 0; i < NMAX; i++ {
+		if history[i].namaAplikasi != "" {
+			adaRiwayat = true
+			break
+		}
+	}
+
+	for pilih != 1 {
+		fmt.Println(bgDarkPastelUngu + "                                " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                              " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "    🍒 " + lightRed + "Riwayat Transaksi" + reset + bgDarkestPastelUngu + " 🍒   " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                              " + bgDarkPastelUngu + " " + reset)
+
+		if !adaRiwayat {
+			fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " Belum ada riwayat transaksi. " + bgDarkPastelUngu + " " + reset)
+			fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " silakan lakukan pembayaran   " + bgDarkPastelUngu + " " + reset)
+			fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " terlebih dahulu.             " + bgDarkPastelUngu + " " + reset)
+		} else {
+			for i := 0; i < NMAX; i++ {
+				if history[i].namaAplikasi != "" {
+					fmt.Printf(bgDarkPastelUngu+" "+bgDarkestPastelUngu+gold+" %d. %s - %s "+bgDarkPastelUngu+" "+reset+"\n",
+						i+1,
+						history[i].namaAplikasi,
+						history[i].tenggatBayar.Format("02 Jan 2006"))
+				}
 			}
 		}
 
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  kembali				   " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + "                            " + bgDarkPastelUngu + " " + reset)
-		fmt.Println(bgDarkPastelUngu + "                              " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                              " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  Kembali                   " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                              " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + "                              " + bgDarkPastelUngu + " " + reset)
+		fmt.Println(bgDarkPastelUngu + "                                " + reset)
 		fmt.Println()
 		fmt.Print(gold + "  Pilih: ")
 		fmt.Scan(&pilih)
 		fmt.Print(reset)
 
 		if pilih == 1 {
-
 			fmt.Println("Kembali ke menu utama...")
-
 		} else {
 			fmt.Println(red + "Invalid, mohon coba lagi." + reset)
 		}
@@ -394,17 +518,33 @@ func pembayaran(saldo *int, list *user, history *riwayat) {
 	if !cek {
 		fmt.Println("Belum ada subskripsi.")
 	}
-	fmt.Println("=============================")
+	fmt.Println(bgDarkPastelUngu + "                              " + reset)
 	for i := 0; i < NMAX; i++ {
 		if list[i].namaAplikasi != "" {
 			total += list[i].harga
 		}
 	}
-	fmt.Println("Total tagihan anda: Rp.", total)
-	fmt.Println("Total saldo anda: Rp.", *saldo)
+	fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
+	fmt.Print(bgDarkPastelUngu + " ")
+	fmt.Print(bgDarkestPastelUngu + gold)
+	fmt.Print(" Total tagihan anda: Rp.", total)
+	fmt.Print(bgDarkestPastelUngu + "   ")
+	fmt.Print(bgDarkPastelUngu + " ")
+	fmt.Println(reset)
+	fmt.Print(bgDarkPastelUngu + " ")
+	fmt.Print(bgDarkestPastelUngu + gold)
+	fmt.Print(" Total saldo anda: Rp.", *saldo)
+	fmt.Print(bgDarkestPastelUngu + "     ")
+	fmt.Print(bgDarkPastelUngu + " ")
+	fmt.Println(reset)
+	fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
+	fmt.Println(bgDarkPastelUngu + "                              " + reset)
 
-	fmt.Print("Lanjutkan Pembayaran? (Y/N)")
+	fmt.Print(gold + "Lanjutkan Pembayaran? (Y/N)")
+	fmt.Println()
+	fmt.Print("  Pilih: ")
 	fmt.Scan(&pilih)
+	fmt.Println(reset)
 	if pilih == "Y" || pilih == "y" {
 		if *saldo < total {
 			fmt.Println("Pembayaran gagal, saldo anda tidak mencukupi")
