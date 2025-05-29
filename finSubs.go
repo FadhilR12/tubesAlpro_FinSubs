@@ -240,7 +240,7 @@ func menuSubksripsi(subskripsi *subcription, list *user) {
 		fmt.Print(reset)
 
 		if pilih == 1 {
-
+			pilihSubs = 0
 			// Menampilkan daftar sub pribadi user
 			for pilihSubs != 2 {
 				fmt.Println("Daftar subskripsi Anda:")
@@ -249,9 +249,11 @@ func menuSubksripsi(subskripsi *subcription, list *user) {
 					fmt.Printf("%d. %s - Rp%d, tenggat: %s\n", i+1, list[i].namaAplikasi, list[i].harga, list[i].tenggatBayar.Format("02 Jan 2006"))
 					cek = true
 				}
+				fmt.Println()
 				if !cek {
 					fmt.Println("Belum ada subskripsi.")
 				}
+				fmt.Println()
 				fmt.Println(bgDarkPastelUngu + "                              " + reset)
 				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                            " + bgDarkPastelUngu + " " + reset)
 				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  Hapus Subskripsi        " + bgDarkPastelUngu + " " + reset)
@@ -299,6 +301,7 @@ func menuSubksripsi(subskripsi *subcription, list *user) {
 				for i := 0; i < NMAX; i++ {
 					fmt.Printf("%d. %s - Rp%d\n", i+1, subskripsi[i].namaAplikasi, subskripsi[i].harga)
 				}
+				fmt.Println()
 				fmt.Println(bgDarkPastelUngu + "                                     " + reset)
 				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + "                                   " + bgDarkPastelUngu + " " + reset)
 				fmt.Println(bgDarkPastelUngu + " " + bgDarkestPastelUngu + gold + " ❶  Cari Subskripsi                " + bgDarkPastelUngu + " " + reset)
@@ -515,9 +518,11 @@ func pembayaran(saldo *int, list *user, history *riwayat) {
 		fmt.Printf("%d. %s - Rp%d\n", i+1, list[i].namaAplikasi, list[i].harga)
 		cek = true
 	}
+	fmt.Println()
 	if !cek {
 		fmt.Println("Belum ada subskripsi.")
 	}
+	fmt.Println()
 	fmt.Println(bgDarkPastelUngu + "                              " + reset)
 	for i := 0; i < NMAX; i++ {
 		if list[i].namaAplikasi != "" {
